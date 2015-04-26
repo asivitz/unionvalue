@@ -17,28 +17,25 @@ Jeweler::Tasks.new do |gem|
   gem.name = "unionvalue"
   gem.homepage = "http://github.com/asivitz/unionvalue"
   gem.license = "MIT"
-  gem.summary = %Q{TODO: one-line summary of your gem}
-  gem.description = %Q{TODO: longer description of your gem}
+  gem.summary = %Q{Immutable union values}
+  gem.description = <<HERE
+Allows easy creation of immutable union values, a.k.a. sum-types.
+
+Example: 
+APICallResult = UnionValue.new(:success, :failure, :timeout)
+APICallResult.failure.is_failure? #=> true
+APICallResult.timeout.is_success? #=> false
+APICallResult.success(12345).data #=> 12345
+HERE
   gem.email = "aosivitz@gmail.com"
   gem.authors = ["Axis Sivitz"]
   # dependencies defined in Gemfile
 end
 Jeweler::RubygemsDotOrgTasks.new
 
-require 'rake/testtask'
-Rake::TestTask.new(:test) do |test|
-  test.libs << 'lib' << 'test'
-  test.pattern = 'test/**/test_*.rb'
-  test.verbose = true
-end
-
-desc "Code coverage detail"
-task :simplecov do
-  ENV['COVERAGE'] = "true"
-  Rake::Task['test'].execute
-end
-
-task :default => :test
+require 'rspec/core/rake_task'
+RSpec::Core::RakeTask.new(:spec)
+task :default => :spec
 
 require 'rdoc/task'
 Rake::RDocTask.new do |rdoc|
