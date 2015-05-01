@@ -1,3 +1,5 @@
+require 'json'
+
 class UnionValue
   def self.new(*values, &block)
 
@@ -30,6 +32,17 @@ class UnionValue
 
       def inspect
         "#<#{self.class.name} #{self.type}:#{self.data}>"
+      end
+
+      def to_json(*a)
+        {
+          "json_class"   => self.class.name,
+          "data"         => {"type" => type, "data" => data }
+        }.to_json(*a)
+      end
+
+      def self.json_create(o)
+        self.send(o['data']['type'], o['data']['data'])
       end
 
       class_eval &block if block
